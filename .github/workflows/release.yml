@@ -31,8 +31,8 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d %H:%M:%S %Z')"
       - name: Create tag name from date
-        id: tagdate
-        run: echo "::set-output name=tagdate::$(date +'%Y-%m-%d_%H-%M-%S_%Z')"
+        id: tagversion
+        run: cat pom.xml | grep "<version>" | head -n1 | cut -d'>' -f2 | cut -d'<' -f1
       - name: Rename WAR
         run: mv target/*.war target/goobi.war
       - name: Release
@@ -40,9 +40,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: ${{ steps.date.outputs.date }}
-          tag_name: ${{ steps.tagdate.outputs.tagdate }}
+          tag_name: ${{ steps.tagversion.outputs.tagversion }}
           generate_release_notes: true
           draft: false
           prerelease: false
           files: |
             **/target/*.war
+
