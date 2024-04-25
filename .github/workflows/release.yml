@@ -33,8 +33,6 @@ jobs:
       - name: Create tag name from version
         id: tagversion
         run: echo "::set-output name=tagversion::$(cat pom.xml | grep '<version>' | head -n1 | cut -d'>' -f2 | cut -d'<' -f1)"
-      - name: Rename WAR
-        run: mv target/*.war target/goobi.war
       - name: Release
         id: create_release
         uses: softprops/action-gh-release@v2
@@ -45,5 +43,5 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            **/target/*.war
+            pom.xml
 
